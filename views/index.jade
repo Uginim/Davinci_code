@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	h1= title
+	input#userName(type="text",value="userName")
+	input#registerUserBtn(type="button",value="register")
+	br
+	input#roomName(type="text",value="roomName")
+	input#makeARoomBtn(type="button",value="make a room")
+	div#roomlist
+	script(src="/stylesheets/style.css")
+	script(src='/socket.io/socket.io.js')
+	script(src='/javascript/RoomClient.js')
+	
+		

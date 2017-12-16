@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>신입공채 시험문제</title>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <style>
+	
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* content style */
+@font-face {
+    font-family: 'NanumGothic';
+    src: url('http://img3.tmon.kr/fe/release/staticResource/common/fonts/NanumGothic-Regular.woff2');
+}
+
+#container {
+    width: 990px;
+    margin: 60px auto;
+    font-family: 'NanumGothic';
+}
+
+.sorting-wrapper {
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: right;
+}
+
+.sorting-wrapper .sorting-item {
+    margin-left: 14px;
+}
+
+.list-group {
+    overflow: hidden;
+    padding-top: 1px;
+    box-sizing: border-box;
+}
+
+.list-group-item {
+    float: left;
+    width: 330px;
+    margin: -1px -1px 0 0;
+    border: 1px solid #e3e5e8;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.list-group-item:nth-child(3n) {
+    margin-right: 0;
+}
+
+.list-group-item img {
+    max-width: 100%;
+    vertical-align: top;
+}
+
+.list-group-item a {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+}
+
+.list-group-item .info-wrapper {
+    position: relative;
+    height: 95px;
+    padding: 20px 0;
+    text-align: left;
+}
+
+.list-group-item .info-wrapper .desc {
+    font-size: 14px;
+    color: #7d7e80;
+    line-height: 1;
+}
+
+.list-group-item .info-wrapper .title {
+    display: block;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #16181a;
+    line-height: 23px;
+}
+
+.list-group-item .info-wrapper .price {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 18px;
+    color: #16181a;
+    line-height: 30px;
+}
+
+.list-group-item .info-wrapper .price strong {
+    font-size: 20px;
+}
+
+.list-group-item .info-wrapper .quantity {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    font-size: 12px;
+    color: #999999;
+}
+
+.list-group-item .info-wrapper .quantity em {
+    font-weight: bold;
+    color: #058aff;
+}    
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="sorting-wrapper">
+            <span class="sorting-item">
+                <label for="high_price">↑ 가격 순</label>
+                <input type="radio" id="high_price">
+            </span>
+             <span class="sorting-item">
+                <label for="low_price">↓ 가격 순</label>
+                <input type="radio" id="low_price">
+            </span>
+            <span class="sorting-item">
+                <label for="many_quantity">↑ 구매 수량 순</label>
+                <input type="radio" id="many_quantity">
+            </span>
+            <span class="sorting-item">
+                <label for="less_quantity">↓ 구매 수량 순</label>
+                <input type="radio" id="less_quantity">
+            </span>
+            <span class="sorting-item">
+                <label for="new">↑ 날짜 순</label>
+                <input type="radio" id="new">
+            </span>
+           
+            
+            <span class="sorting-item">
+                <label for="old">↓ 날짜 순</label>
+                <input type="radio" id="old">
+            </span>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="">
+                    <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                    <div class="info-wrapper">
+                        <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                        <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                        <strong class="price"><strong>6,900</strong>원</strong>
+                        <span class="quantity">구매한 수량 <em>1</em>개</span>
+                    </div>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="">
+                    <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                    <div class="info-wrapper">
+                        <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                        <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                        <strong class="price"><strong>6,900</strong>원</strong>
+                        <span class="quantity">구매한 수량 <em>1</em>개</span>
+                    </div>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="">
+                    <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                    <div class="info-wrapper">
+                        <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                        <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                        <strong class="price"><strong>6,900</strong>원</strong>
+                        <span class="quantity">구매한 수량 <em>1</em>개</span>
+                    </div>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="">
+                    <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                    <div class="info-wrapper">
+                        <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                        <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                        <strong class="price"><strong>6,900</strong>원</strong>
+                        <span class="quantity">구매한 수량 <em>1</em>개</span>
+                    </div>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="">
+                    <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                    <div class="info-wrapper">
+                        <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                        <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                        <strong class="price"><strong>6,900</strong>원</strong>
+                        <span class="quantity">구매한 수량 <em>1</em>개</span>
+                    </div>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="">
+                    <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                    <div class="info-wrapper">
+                        <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                        <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                        <strong class="price"><strong>6,900</strong>원</strong>
+                        <span class="quantity">구매한 수량 <em>1</em>개</span>
+                    </div>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="">
+                    <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                    <div class="info-wrapper">
+                        <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                        <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                        <strong class="price"><strong>6,900</strong>원</strong>
+                        <span class="quantity">구매한 수량 <em>1</em>개</span>
+                    </div>
+                </a>
+            </li>
+            <li class="list-group-item">
+                    <a href="">
+                        <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                        <div class="info-wrapper">
+                            <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                            <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                            <strong class="price"><strong>6,900</strong>원</strong>
+                            <span class="quantity">구매한 수량 <em>1</em>개</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="">
+                        <img src="http://image.ticketmonster.co.kr/deals/2017/10/18/721833454/catlist_3col_v2_391dd.jpg" alt="">
+                        <div class="info-wrapper">
+                            <span class="desc">노릇노릇한 속살, 구수한 향기</span>
+                            <strong class="title">[월동준비]2017 노릇구수한 약단밤 1kg</strong>
+                            <strong class="price"><strong>6,900</strong>원</strong>
+                            <span class="quantity">구매한 수량 <em>1</em>개</span>
+                        </div>
+                    </a>
+                </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+	//$("#btn").click(function() {
+	    $.ajax({
+		url : "http://onlinetest.ticketmonster.co.kr/api/sample/jsonp",
+		data : {
+			start:0,
+			limit:10,
+		},
+		jsonp : "callback",
+		dataType : "jsonp",
+		error:function(xhr,status,error){
+		    alert(xhr);
+		    alert(error);
+		},
+		success: function(data) {
+		    alert(data.message + ", " +data.error_code);
+		}
+	    });
+	//});
+
+    </script>
+</body>
+
+</html>
