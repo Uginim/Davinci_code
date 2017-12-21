@@ -7,8 +7,11 @@ block content
 	br
 	input#roomName(type="text",value="roomName")
 	input#makeARoomBtn(type="button",value="make a room")
+	br
 	div#roomlist
-	script(src="/stylesheets/style.css")
+	div#chatWindows
+	input#chatMessage(type="textedit")
+	input#submitButton(type="button",value="submit")
 	script(src='/socket.io/socket.io.js')
 	script(src='/javascript/RoomClient.js')
 	

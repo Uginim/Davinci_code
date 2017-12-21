@@ -3,8 +3,7 @@
  */
 var socket = io.connect();
 var roomController = (function(){
-    // socket.io 서버에 접속한다
-   
+    // socket.io 서버에 접속한다   
     //socket.connect();
     
     //user 접속

@@ -9,5 +9,11 @@ a {
 
 #roomlist {
 	width:250px;
-	height:300px;	
+	height:100px;	
+}
+#chatWindows{
+	background:rgb(230,230,230);
+	width:250px;
+	height:300px;
+	overflow-y:auto;
 }
