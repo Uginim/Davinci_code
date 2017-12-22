@@ -49,12 +49,11 @@ io.on('connection',function(socket){
 		//console.log("userId:"+data.userId);
 		//console.log("roomManager:"+Object.keys(roomManager));
 		user = userManager.getUser(data.userId);
-		roomManager.createRoom(data.roomName,user,4)
+		roomManager.createRoom(data.roomName,user,4);
 		//userManager.createUser(data.name);
 		
 		io.emit('roomlist',{type:'creating_room_success',
-			roomList:roomManager.getRoomList()});
-	
+			roomList:roomManager.getRoomList()});	
 		console.log("response");
 	});
 });
