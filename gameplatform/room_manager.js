@@ -51,6 +51,9 @@ exports.room_manager = (function (){
 		var newGameRoom;
 		newGameRoom = new GameRoom(roomName,roomOwner,maxNumOfMembers);
 		rooms.push(newGameRoom);
+		console.log('newGameRoom:',newGameRoom);
+		//return newGameRoom.getRoomId();
+		return newGameRoom;
 	}
 	function deleteRoom(roomId){
 		var i;
@@ -64,6 +67,17 @@ exports.room_manager = (function (){
 	}
 	function getRoomList(){//배열 수정가능한게 괜찮은가...
 		return rooms;
+	}
+	//room찾기
+	function getRoom(roomId){
+		var i;
+		for(i=0;i<rooms.length;i+=1){
+			if(rooms[i].roomId===roomId){
+				return rooms[i]; 
+			}
+			
+		}
+		return null;
 	}
 	function putUserInRoom(roomId,user){
 		//배열내에서  찾기.. 나중엔 쉽게 서칭하는 방법 찾기!v
@@ -96,7 +110,8 @@ exports.room_manager = (function (){
 		deleteRoom:deleteRoom,
 		getRoomList:getRoomList,
 		putUserInRoom:putUserInRoom,
-		letUserGoOutOfRoom:letUserGoOutOfRoom
+		letUserGoOutOfRoom:letUserGoOutOfRoom,
+		getRoom:getRoom
 	}
 	
 })();

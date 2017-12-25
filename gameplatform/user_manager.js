@@ -16,6 +16,7 @@ exports.user_manager = (function (){
 		return this.userId;
 	};
 	
+	///user생성
 	//console.log(uuid);
 	function createUser(userName){
 		var newUser;
@@ -23,9 +24,12 @@ exports.user_manager = (function (){
 		users.push(newUser);
 		return newUser.userId;
 	}
+	//user목록
 	function getUserList(){
 		return users;
 	}
+	
+	//user찾기
 	function getUser(userId){
 		var i;
 		for(i=0;i<users.length;i+=1){

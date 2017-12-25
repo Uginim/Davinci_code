@@ -7,10 +7,17 @@ a {
   color: #00B7FF;
 }
 
-#roomlist {
+#roomList {
 	width:250px;
-	height:100px;	
+	height:100px;
+	background:rgb(210,230,230);
+	overflow-y:auto;	
 }
+.roomItem {
+	
+}
+
+
 #chatWindows{
 	background:rgb(230,230,230);
 	width:250px;
