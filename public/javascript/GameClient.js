@@ -1,10 +1,9 @@
 /**
- * Da Vinci Code Game Client
- * 프론트엔드 게임 로직 및 UI 컨트롤
+ * Da Vinci Code Game Client - WebSocket 버전
+ * Ktor WebSocket 서버와 통신
  */
 
 var gameClient = (function() {
-    var socket = io.connect();
     var userId = null;
     var roomInfo = null;
     var gameState = null;
@@ -25,11 +24,7 @@ var gameClient = (function() {
     };
 
     // 초기화
-    function init(existingSocket, existingUserId, existingRoomInfo) {
-        if (existingSocket) socket = existingSocket;
-        userId = existingUserId;
-        roomInfo = existingRoomInfo;
-
+    function init() {
         // DOM 요소 참조
         elements.gameBoard = document.getElementById('gameBoard');
         elements.playerArea = document.getElementById('playerArea');
@@ -69,72 +64,75 @@ var gameClient = (function() {
 
     // 소켓 이벤트 리스너 설정
     function setupSocketListeners() {
-        // 게임 시작됨
-        socket.on('gameStarted', function(data) {
-            console.log('Game started!', data);
-            updateGameStatus('게임이 시작되었습니다!');
-            if (elements.startGameBtn) {
-                elements.startGameBtn.style.display = 'none';
-            }
-        });
+        // chatClient의 on 메서드 사용
+        if (typeof chatClient !== 'undefined') {
+            // 게임 시작됨
+            chatClient.on('gameStarted', function(data) {
+                console.log('Game started!', data);
+                updateGameStatus('게임이 시작되었습니다!');
+                if (elements.startGameBtn) {
+                    elements.startGameBtn.style.display = 'none';
+                }
+            });
 
-        // 게임 상태 업데이트
-        socket.on('gameState', function(data) {
-            console.log('Game state received:', data);
-            gameState = data;
-            renderGameState();
-        });
+            // 게임 상태 업데이트
+            chatClient.on('gameState', function(data) {
+                console.log('Game state received:', data);
+                gameState = data;
+                renderGameState();
+            });
 
-        socket.on('gameStateUpdate', function(data) {
-            console.log('Game state updated:', data);
-            gameState = data;
-            renderGameState();
-        });
+            chatClient.on('gameStateUpdate', function(data) {
+                console.log('Game state updated:', data);
+                gameState = data;
+                renderGameState();
+            });
 
-        // 타일 뽑기 응답
-        socket.on('resDrawTile', function(data) {
-            if (data.success) {
-                console.log('Drew tile:', data.tile);
-                updateGameStatus('타일을 뽑았습니다: ' + data.tile.color + ' ' + data.tile.number);
-            } else {
-                alert(data.message);
-            }
-        });
+            // 타일 뽑기 응답
+            chatClient.on('resDrawTile', function(data) {
+                if (data.success) {
+                    console.log('Drew tile:', data.tile);
+                    updateGameStatus('타일을 뽑았습니다: ' + data.tile.color + ' ' + data.tile.number);
+                } else {
+                    alert(data.message);
+                }
+            });
 
-        // 다른 플레이어가 타일을 뽑음
-        socket.on('playerDrewTile', function(data) {
-            console.log('Player drew tile:', data.userId);
-            updateGameStatus('플레이어가 타일을 뽑았습니다');
-        });
+            // 다른 플레이어가 타일을 뽑음
+            chatClient.on('playerDrewTile', function(data) {
+                console.log('Player drew tile:', data.userId);
+                updateGameStatus('플레이어가 타일을 뽑았습니다');
+            });
 
-        // 추리 결과
-        socket.on('guessResult', function(data) {
-            console.log('Guess result:', data);
-            var message = data.correct ?
-                '정답! ' + data.tile.number + '을(를) 맞췄습니다!' :
-                '오답! 실제 숫자는 ' + data.tile.number + '입니다.';
+            // 추리 결과
+            chatClient.on('guessResult', function(data) {
+                console.log('Guess result:', data);
+                var message = data.correct ?
+                    '정답! ' + data.tile.number + '을(를) 맞췄습니다!' :
+                    '오답! 실제 숫자는 ' + data.tile.number + '입니다.';
 
-            updateGameStatus(message);
-            selectedTile = null; // 선택 초기화
-        });
+                updateGameStatus(message);
+                selectedTile = null; // 선택 초기화
+            });
 
-        // 턴 변경
-        socket.on('turnChanged', function(data) {
-            console.log('Turn changed to:', data.currentPlayer);
-            updateGameStatus('턴이 바뀌었습니다');
-            renderGameState();
-        });
+            // 턴 변경
+            chatClient.on('turnChanged', function(data) {
+                console.log('Turn changed to:', data.currentPlayer);
+                updateGameStatus('턴이 바뀌었습니다');
+                renderGameState();
+            });
 
-        // 게임 종료
-        socket.on('gameEnded', function(data) {
-            console.log('Game ended:', data);
-            var message = data.winner ?
-                '게임 종료! 승자: ' + data.winner :
-                '게임 종료!';
+            // 게임 종료
+            chatClient.on('gameEnded', function(data) {
+                console.log('Game ended:', data);
+                var message = data.winner ?
+                    '게임 종료! 승자: ' + data.winner :
+                    '게임 종료!';
 
-            updateGameStatus(message);
-            alert(message);
-        });
+                updateGameStatus(message);
+                alert(message);
+            });
+        }
     }
 
     // 게임 시작
@@ -144,7 +142,7 @@ var gameClient = (function() {
             return;
         }
 
-        socket.emit('reqStartGame', {
+        chatClient.sendReqMsg('reqStartGame', {
             roomId: roomInfo.roomId,
             userId: userId
         });
@@ -157,10 +155,10 @@ var gameClient = (function() {
             return;
         }
 
-        socket.emit('reqDrawTile', {
+        chatClient.sendReqMsg('reqDrawTile', {
             roomId: roomInfo.roomId,
             userId: userId,
-            fromRevealed: fromRevealed || false
+            fromRevealed: String(fromRevealed || false)
         });
     }
 
@@ -171,7 +169,7 @@ var gameClient = (function() {
             return;
         }
 
-        socket.emit('reqEndTurn', {
+        chatClient.sendReqMsg('reqEndTurn', {
             roomId: roomInfo.roomId,
             userId: userId
         });
@@ -190,12 +188,12 @@ var gameClient = (function() {
             return;
         }
 
-        socket.emit('reqGuess', {
+        chatClient.sendReqMsg('reqGuess', {
             roomId: roomInfo.roomId,
             userId: userId,
             targetUserId: selectedTile.userId,
-            tileIndex: selectedTile.index,
-            guessedNumber: guessedNumber
+            tileIndex: String(selectedTile.index),
+            guessedNumber: String(guessedNumber)
         });
 
         elements.guessNumberInput.value = '';
@@ -292,7 +290,7 @@ var gameClient = (function() {
     // 타일 요소 생성
     function createTileElement(tile, index, playerId, isOwn) {
         var tileDiv = document.createElement('div');
-        tileDiv.className = 'tile ' + tile.color;
+        tileDiv.className = 'tile ' + tile.color.toLowerCase();
 
         if (tile.isRevealed) {
             tileDiv.classList.add('revealed');
@@ -357,8 +355,8 @@ var gameClient = (function() {
 document.addEventListener('DOMContentLoaded', function() {
     // chatClient가 로드될 때까지 대기
     var initInterval = setInterval(function() {
-        if (typeof chatClient !== 'undefined' && chatClient.socket) {
-            gameClient.init(chatClient.socket, chatClient.getUserId(), chatClient.getRoomInfo());
+        if (typeof chatClient !== 'undefined') {
+            gameClient.init();
             clearInterval(initInterval);
         }
     }, 100);

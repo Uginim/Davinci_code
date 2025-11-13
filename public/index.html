@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다빈치 코드 게임</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <h1>다빈치 코드 게임</h1>
+
+    <div class="container">
+        <div class="lobby-section">
+            <h2>로비</h2>
+            <div class="user-section">
+                <input id="userName" type="text" placeholder="사용자 이름">
+                <input id="registerUserBtn" type="button" value="등록">
+            </div>
+
+            <div class="room-section">
+                <input id="roomName" type="text" placeholder="방 이름">
+                <input id="makeARoomBtn" type="button" value="방 만들기">
+                <br>
+                <div id="roomList"></div>
+                <div class="room-controls">
+                    <input id="exitRoomBtn" type="button" value="방 나가기">
+                    <input id="refreshRoomList" type="button" value="새로고침">
+                </div>
+            </div>
+        </div>
+
+        <div class="game-section">
+            <h2>다빈치 코드</h2>
+            <div id="currentTurnDisplay" class="turn-display">게임 대기 중...</div>
+            <div id="gameStatus" class="game-status">방에 입장하고 게임을 시작하세요</div>
+
+            <div class="game-controls">
+                <button id="startGameBtn" class="btn-primary">게임 시작</button>
+                <button id="drawTileBtn" class="btn-action" disabled>타일 뽑기</button>
+                <button id="endTurnBtn" class="btn-action" disabled>턴 종료</button>
+            </div>
+
+            <div class="guess-controls">
+                <input id="guessNumberInput" type="number" min="0" max="11" placeholder="0-11">
+                <button id="submitGuessBtn" class="btn-guess" disabled>추리하기</button>
+            </div>
+
+            <div id="gameBoard" class="game-board">
+                <div id="playerArea" class="player-area"></div>
+                <div id="opponentArea" class="opponent-area"></div>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <h2>채팅</h2>
+            <div id="chatWindows" class="chat-windows"></div>
+            <div class="chat-input">
+                <input id="chatMessage" type="text" placeholder="메시지 입력">
+                <input id="submitButton" type="button" value="전송">
+            </div>
+        </div>
+    </div>
+
+    <script src="/javascript/ChattingClient.js"></script>
+    <script src="/javascript/GameClient.js"></script>
+</body>
+</html>
