@@ -2,22 +2,52 @@ extends layout
 
 block content
 	h1= title
-	input#userName(type="text",value="userName")
-	input#registerUserBtn(type="button",value="register")
-	br
-	input#roomName(type="text",value="roomName")
-	input#makeARoomBtn(type="button",value="make a room")
-	br
-	div#roomList
-	input#exitRoomBtn(type="button",value="exit the room")
-	input#enterRoomBtn(type="button",value="enter the room")
-	input#refreshRoomList(type="button",value="refresh")
-	div#chatWindows
-	input#chatMessage(type="textedit")
-	input#submitButton(type="button",value="submit")
+
+	div.container
+		div.lobby-section
+			h2 로비
+			div.user-section
+				input#userName(type="text",placeholder="사용자 이름")
+				input#registerUserBtn(type="button",value="등록")
+
+			div.room-section
+				input#roomName(type="text",placeholder="방 이름")
+				input#makeARoomBtn(type="button",value="방 만들기")
+				br
+				div#roomList
+				div.room-controls
+					input#exitRoomBtn(type="button",value="방 나가기")
+					input#refreshRoomList(type="button",value="새로고침")
+
+		div.game-section
+			h2 다빈치 코드
+			div#currentTurnDisplay.turn-display 게임 대기 중...
+			div#gameStatus.game-status 방에 입장하고 게임을 시작하세요
+
+			div.game-controls
+				button#startGameBtn.btn-primary 게임 시작
+				button#drawTileBtn.btn-action(disabled) 타일 뽑기
+				button#endTurnBtn.btn-action(disabled) 턴 종료
+
+			div.guess-controls
+				input#guessNumberInput(type="number",min="0",max="11",placeholder="0-11")
+				button#submitGuessBtn.btn-guess(disabled) 추리하기
+
+			div#gameBoard.game-board
+				div#playerArea.player-area
+				div#opponentArea.opponent-area
+
+		div.chat-section
+			h2 채팅
+			div#chatWindows.chat-windows
+			div.chat-input
+				input#chatMessage(type="text",placeholder="메시지 입력")
+				input#submitButton(type="button",value="전송")
+
 	script(src='/socket.io/socket.io.js')
 	script(src='/javascript/ChattingClient.js')
-	
-		
+	script(src='/javascript/GameClient.js')
+
+
 
 		

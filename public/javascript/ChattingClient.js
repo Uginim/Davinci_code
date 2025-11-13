@@ -61,6 +61,10 @@ var chatClient = (function (){
 	socket.on('resCreatingRoom',(data)=>{
 		roomInfo=data.roomInfo;
 		console.log(data);
+		// GameClient에 roomInfo 전달
+		if (typeof gameClient !== 'undefined') {
+			gameClient.setRoomInfo(roomInfo);
+		}
 	});	
 	//입장
 	//user정보,room정보
@@ -69,6 +73,10 @@ var chatClient = (function (){
 	socket.on('resEnteringARoom',(data)=>{
 		roomInfo=data.roomInfo;
 		console.log(data);
+		// GameClient에 roomInfo 전달
+		if (typeof gameClient !== 'undefined') {
+			gameClient.setRoomInfo(roomInfo);
+		}
 	});
 	//퇴실
 	//user정보,room정보
@@ -89,6 +97,10 @@ var chatClient = (function (){
 		userId=data.userId;
 		document.getElementById("userName").disabled = true;
 		document.getElementById("registerUserBtn").disabled = true;
+		// GameClient에 userId 전달
+		if (typeof gameClient !== 'undefined') {
+			gameClient.setUserId(userId);
+		}
 	});
 	
 	//user접속

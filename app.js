@@ -9,7 +9,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 var userManager = require('./gameplatform/user_manager').user_manager,
-	roomManager = require('./gameplatform/room_manager').room_manager;
+	roomManager = require('./gameplatform/room_manager').room_manager,
+	gameManager = require('./gameplatform/game_manager').game_manager;
 
 var app = express();
 
@@ -113,13 +114,155 @@ io.on('connection',function(socket){
 	});
 	//메시지 전송
 	socket.on('reqSendMessage',function(data){
-		var user;		
+		var user;
 		user = userManager.getUser(data.userId);
 		io.to(data.roomId).emit('chatMsg',{msg:'['+user.userName+']: '+data.msg});
-		socket.emit('roomlist',{type:'sending message success'});	
+		socket.emit('roomlist',{type:'sending message success'});
 		console.log('roomId:',data.roomId,data)
 	});
-	
-	
+
+	// 게임 시작
+	socket.on('reqStartGame', function(data) {
+		var room = roomManager.getRoom(data.roomId);
+		if (!room) {
+			socket.emit('resStartGame', {success: false, message: 'Room not found'});
+			return;
+		}
+
+		// 게임 생성
+		var result = gameManager.createGame(data.roomId, room.getMembers());
+		if (!result.success) {
+			socket.emit('resStartGame', result);
+			return;
+		}
+
+		// 게임 시작
+		var startResult = gameManager.startGame(data.roomId);
+		if (startResult.success) {
+			room.gameStatus = 'playing';
+
+			// 모든 플레이어에게 게임 시작 알림
+			io.to(data.roomId).emit('gameStarted', {
+				message: 'Game started!',
+				currentPlayer: startResult.currentPlayer
+			});
+
+			// 각 플레이어에게 개별 게임 상태 전송
+			var game = gameManager.getGame(data.roomId);
+			room.getMembers().forEach(function(member) {
+				var gameState = game.getGameState(member.userId);
+				io.to(data.roomId).emit('gameState', gameState);
+			});
+		}
+
+		socket.emit('resStartGame', startResult);
+	});
+
+	// 타일 뽑기
+	socket.on('reqDrawTile', function(data) {
+		var game = gameManager.getGame(data.roomId);
+		if (!game) {
+			socket.emit('resDrawTile', {success: false, message: 'Game not found'});
+			return;
+		}
+
+		var result = game.drawTile(data.userId, data.fromRevealed || false);
+
+		if (result.success) {
+			// 타일을 뽑은 플레이어에게만 타일 정보 전송
+			socket.emit('resDrawTile', result);
+
+			// 다른 플레이어들에게는 타일을 뽑았다는 알림만 전송
+			socket.to(data.roomId).emit('playerDrewTile', {
+				userId: data.userId,
+				fromRevealed: data.fromRevealed || false
+			});
+
+			// 모든 플레이어에게 업데이트된 게임 상태 전송
+			var gameState = game.getGameState(data.userId);
+			io.to(data.roomId).emit('gameStateUpdate', gameState);
+		} else {
+			socket.emit('resDrawTile', result);
+		}
+	});
+
+	// 숫자 추리
+	socket.on('reqGuess', function(data) {
+		var game = gameManager.getGame(data.roomId);
+		if (!game) {
+			socket.emit('resGuess', {success: false, message: 'Game not found'});
+			return;
+		}
+
+		var result = game.guess(data.userId, data.targetUserId, data.tileIndex, data.guessedNumber);
+
+		if (result.success) {
+			// 추리 결과를 방의 모든 사람에게 전송
+			io.to(data.roomId).emit('guessResult', {
+				guesserId: data.userId,
+				targetUserId: data.targetUserId,
+				tileIndex: data.tileIndex,
+				guessedNumber: data.guessedNumber,
+				correct: result.correct,
+				tile: result.tile,
+				penaltyTile: result.penaltyTile,
+				targetEliminated: result.targetEliminated,
+				guesserEliminated: result.guesserEliminated,
+				message: result.message
+			});
+
+			// 업데이트된 게임 상태 전송
+			var gameState = game.getGameState(data.userId);
+			io.to(data.roomId).emit('gameStateUpdate', gameState);
+
+			// 게임이 끝났는지 확인
+			if (gameState.gameStatus === 'ended') {
+				io.to(data.roomId).emit('gameEnded', {
+					winner: gameState.winner,
+					message: 'Game Over!'
+				});
+			}
+		}
+
+		socket.emit('resGuess', result);
+	});
+
+	// 턴 종료
+	socket.on('reqEndTurn', function(data) {
+		var game = gameManager.getGame(data.roomId);
+		if (!game) {
+			socket.emit('resEndTurn', {success: false, message: 'Game not found'});
+			return;
+		}
+
+		var result = game.endTurn(data.userId);
+
+		if (result.success) {
+			// 턴이 바뀌었음을 모두에게 알림
+			io.to(data.roomId).emit('turnChanged', {
+				currentPlayer: result.currentPlayer,
+				message: 'Turn changed'
+			});
+
+			// 업데이트된 게임 상태 전송
+			var gameState = game.getGameState(data.userId);
+			io.to(data.roomId).emit('gameStateUpdate', gameState);
+		}
+
+		socket.emit('resEndTurn', result);
+	});
+
+	// 게임 상태 조회
+	socket.on('reqGameState', function(data) {
+		var game = gameManager.getGame(data.roomId);
+		if (!game) {
+			socket.emit('resGameState', {success: false, message: 'Game not found'});
+			return;
+		}
+
+		var gameState = game.getGameState(data.userId);
+		socket.emit('resGameState', {success: true, gameState: gameState});
+	});
+
 });
 
